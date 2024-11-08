@@ -84,7 +84,7 @@ def list():
         query = query.filter(Game.genre == selected_genre)
     
     games = query.all()
-    return render_template('games/list.html', games=games, filter_form=filter_form, func=func)
+    return render_template('games/list.html', games=games, filter_form=filter_form, func=func, Review=Review)
 
 @games_bp.route('/guides')
 def guides():
