@@ -22,25 +22,25 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class="nav-link d-flex align-items-center" href="{{ url_for('games.list') }}">
+                        <a class="nav-link d-flex align-items-center {{ 'active' if request.endpoint and request.endpoint.startswith('games.') else '' }}" href="{{ url_for('games.list') }}">
                             <i data-feather="play" class="me-2"></i>
                             Games
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link d-flex align-items-center" href="{{ url_for('news.index') }}">
+                        <a class="nav-link d-flex align-items-center {{ 'active' if request.endpoint and request.endpoint.startswith('news.') else '' }}" href="{{ url_for('news.index') }}">
                             <i data-feather="globe" class="me-2"></i>
                             News
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link d-flex align-items-center" href="{{ url_for('reviews.index') }}">
+                        <a class="nav-link d-flex align-items-center {{ 'active' if request.endpoint and request.endpoint.startswith('reviews.') else '' }}" href="{{ url_for('reviews.index') }}">
                             <i data-feather="star" class="me-2"></i>
                             Reviews
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link d-flex align-items-center" href="{{ url_for('games.guides') }}">
+                        <a class="nav-link d-flex align-items-center {{ 'active' if request.endpoint and request.endpoint == 'games.guides' else '' }}" href="{{ url_for('games.guides') }}">
                             <i data-feather="book" class="me-2"></i>
                             Guides
                         </a>
@@ -49,7 +49,7 @@
                 <ul class="navbar-nav">
                     {% if current_user.is_authenticated %}
                     <li class="nav-item">
-                        <a class="nav-link d-flex align-items-center" href="{{ url_for('profile.index') }}">
+                        <a class="nav-link d-flex align-items-center {{ 'active' if request.endpoint and request.endpoint.startswith('profile.') else '' }}" href="{{ url_for('profile.index') }}">
                             <i data-feather="user" class="me-2"></i>
                             Profile
                         </a>
@@ -62,13 +62,13 @@
                     </li>
                     {% else %}
                     <li class="nav-item">
-                        <a class="nav-link d-flex align-items-center" href="{{ url_for('auth.login') }}">
+                        <a class="nav-link d-flex align-items-center {{ 'active' if request.endpoint == 'auth.login' else '' }}" href="{{ url_for('auth.login') }}">
                             <i data-feather="log-in" class="me-2"></i>
                             Login
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link d-flex align-items-center" href="{{ url_for('auth.register') }}">
+                        <a class="nav-link d-flex align-items-center {{ 'active' if request.endpoint == 'auth.register' else '' }}" href="{{ url_for('auth.register') }}">
                             <i data-feather="user-plus" class="me-2"></i>
                             Register
                         </a>
