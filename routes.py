@@ -22,21 +22,12 @@ def index():
         recommended_games = current_user.get_recommended_games(limit=6)
     else:
         # For non-logged in users, show popular games based on ratings
-        # Using a subquery to get the ratings data
-        ratings_subquery = db.session.query(
-            Review.game_id,
-            func.avg(Review.rating).label('avg_rating'),
-            func.count(Review.id).label('review_count')
-        ).group_by(Review.game_id).subquery()
-        
-        # Join with games and order by ratings
         recommended_games = db.session.query(Game).join(
-            ratings_subquery,
-            Game.id == ratings_subquery.c.game_id,
-            isouter=True
-        ).order_by(
-            ratings_subquery.c.avg_rating.desc().nullslast(),
-            ratings_subquery.c.review_count.desc().nullslast()
+            Review,
+            Game.id == Review.game_id
+        ).group_by(Game.id).order_by(
+            func.avg(Review.rating).desc(),
+            func.count(Review.id).desc()
         ).limit(6).all()
     
     return render_template('home.html', games=games, news=news, recommended_games=recommended_games)
