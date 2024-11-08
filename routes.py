@@ -3,6 +3,7 @@ from flask_login import login_user, logout_user, login_required, current_user
 from app import db
 from models import User, Game, Review, News, Guide
 from forms import LoginForm, RegisterForm, ReviewForm, GuideForm
+from sqlalchemy import func
 
 main_bp = Blueprint('main', __name__)
 auth_bp = Blueprint('auth', __name__, url_prefix='/auth')
@@ -15,7 +16,24 @@ profile_bp = Blueprint('profile', __name__, url_prefix='/profile')
 def index():
     games = Game.query.order_by(Game.release_date.desc()).limit(6).all()
     news = News.query.order_by(News.created_at.desc()).limit(3).all()
-    return render_template('home.html', games=games, news=news)
+    
+    # Get recommended games if user is logged in
+    recommended_games = []
+    if current_user.is_authenticated:
+        recommended_games = current_user.get_recommended_games(limit=6)
+    else:
+        # For non-logged in users, show popular games based on ratings
+        recommended_games = db.session.query(
+            Game,
+            func.avg(Review.rating).label('avg_rating'),
+            func.count(Review.id).label('review_count')
+        ).outerjoin(Review).group_by(Game.id).order_by(
+            func.avg(Review.rating).desc(),
+            func.count(Review.id).desc()
+        ).limit(6).all()
+        recommended_games = [game[0] for game in recommended_games]
+    
+    return render_template('home.html', games=games, news=news, recommended_games=recommended_games)
 
 @auth_bp.route('/login', methods=['GET', 'POST'])
 def login():
@@ -73,4 +91,6 @@ def index():
 @profile_bp.route('/')
 @login_required
 def index():
-    return render_template('profile/index.html')
+    # Get recommended games for the user's profile page
+    recommended_games = current_user.get_recommended_games(limit=6)
+    return render_template('profile/index.html', recommended_games=recommended_games)

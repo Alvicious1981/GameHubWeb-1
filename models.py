@@ -2,6 +2,7 @@ from datetime import datetime
 from app import db, login_manager
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
+from sqlalchemy import func
 
 @login_manager.user_loader
 def load_user(id):
@@ -19,6 +20,37 @@ class User(UserMixin, db.Model):
         
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
+    
+    def get_recommended_games(self, limit=6):
+        # Get user's reviewed games
+        reviewed_games = db.session.query(Game.id).join(Review).filter(Review.user_id == self.id).subquery()
+        
+        # Get user's preferred genres based on highly rated games (rating >= 4)
+        preferred_genres = db.session.query(Game.genre).join(Review).filter(
+            Review.user_id == self.id,
+            Review.rating >= 4
+        ).group_by(Game.genre).all()
+        preferred_genres = [genre[0] for genre in preferred_genres]
+        
+        # Build recommendation query
+        recommendation_query = db.session.query(
+            Game,
+            func.avg(Review.rating).label('avg_rating'),
+            func.count(Review.id).label('review_count')
+        ).outerjoin(Review).group_by(Game.id).filter(
+            ~Game.id.in_(reviewed_games)  # Exclude already reviewed games
+        )
+        
+        if preferred_genres:
+            recommendation_query = recommendation_query.filter(Game.genre.in_(preferred_genres))
+        
+        # Order by average rating and review count
+        recommendations = recommendation_query.order_by(
+            func.avg(Review.rating).desc(),
+            func.count(Review.id).desc()
+        ).limit(limit).all()
+        
+        return [game[0] for game in recommendations]
 
 class Game(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -28,6 +60,14 @@ class Game(db.Model):
     genre = db.Column(db.String(50))
     reviews = db.relationship('Review', backref='game', lazy='dynamic')
     guides = db.relationship('Guide', backref='game', lazy='dynamic')
+    
+    @property
+    def average_rating(self):
+        return db.session.query(func.avg(Review.rating)).filter(Review.game_id == self.id).scalar() or 0
+    
+    @property
+    def review_count(self):
+        return self.reviews.count()
 
 class Review(db.Model):
     id = db.Column(db.Integer, primary_key=True)
