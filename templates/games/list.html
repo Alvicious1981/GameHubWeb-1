@@ -9,7 +9,7 @@
         <div class="d-flex gap-3">
             <form method="GET" class="d-flex gap-2">
                 {{ filter_form.genre(class="form-select") }}
-                <button type="submit" class="btn btn-secondary">
+                <button type="submit" class="btn btn-gaming btn-gaming-secondary">
                     <i data-feather="filter"></i> Filter
                 </button>
             </form>
@@ -37,9 +37,13 @@
                     <span class="ms-2">({{ game.reviews.count() }} reviews)</span>
                 </div>
                 <div class="d-flex gap-2">
-                    <a href="#" class="btn btn-gaming btn-sm">View Details</a>
+                    <a href="#" class="btn btn-gaming btn-gaming-primary">
+                        <i data-feather="play-circle"></i> Play Now
+                    </a>
                     {% if current_user.is_authenticated %}
-                    <a href="#" class="btn btn-outline-gaming btn-sm">Write Review</a>
+                    <a href="#" class="btn btn-gaming btn-gaming-secondary">
+                        <i data-feather="edit-3"></i> Review
+                    </a>
                     {% endif %}
                 </div>
             </div>

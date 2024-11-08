@@ -168,28 +168,121 @@ h1, h2, h3, .navbar-brand {
     z-index: 1;
     font-family: var(--font-subheading);
     font-weight: 600;
+    padding: 0.5rem 1.25rem;
+    transition: all 0.3s ease;
 }
 
 .btn-gaming::before {
     content: '';
     position: absolute;
     top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(45deg, var(--gaming-secondary), var(--gaming-primary));
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    z-index: -1;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s ease;
 }
 
 .btn-gaming:hover::before {
-    opacity: 1;
+    left: 100%;
 }
 
 .btn-gaming:hover {
     transform: translateY(-2px);
     box-shadow: 0 0 15px rgba(124, 77, 255, 0.5);
+}
+
+.btn-gaming:active {
+    transform: translateY(1px);
+}
+
+/* Primary action button */
+.btn-gaming-primary {
+    background: linear-gradient(45deg, var(--gaming-accent), var(--gaming-neon));
+    color: var(--gaming-dark);
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.btn-gaming-primary:hover {
+    color: var(--gaming-dark);
+    box-shadow: 0 0 20px rgba(57, 255, 20, 0.5);
+}
+
+/* Secondary action button */
+.btn-gaming-secondary {
+    background: transparent;
+    border: 2px solid var(--gaming-primary);
+    color: var(--gaming-primary);
+}
+
+.btn-gaming-secondary::before {
+    background: linear-gradient(90deg, transparent, var(--gaming-primary), transparent);
+    opacity: 0.2;
+}
+
+.btn-gaming-secondary:hover {
+    color: var(--gaming-accent);
+    border-color: var(--gaming-accent);
+    box-shadow: 0 0 15px rgba(0, 229, 255, 0.3);
+}
+
+/* Danger action button */
+.btn-gaming-danger {
+    background: linear-gradient(45deg, #ff4081, #ff1744);
+    color: white;
+}
+
+.btn-gaming-danger:hover {
+    color: white;
+    box-shadow: 0 0 15px rgba(255, 23, 68, 0.5);
+}
+
+/* Success action button */
+.btn-gaming-success {
+    background: linear-gradient(45deg, #00e676, #00c853);
+    color: var(--gaming-dark);
+}
+
+.btn-gaming-success:hover {
+    color: var(--gaming-dark);
+    box-shadow: 0 0 15px rgba(0, 230, 118, 0.5);
+}
+
+/* Icon button animation */
+.btn-gaming [data-feather] {
+    transition: transform 0.3s ease;
+    vertical-align: middle;
+}
+
+.btn-gaming:hover [data-feather] {
+    transform: scale(1.2);
+}
+
+/* Loading state animation */
+.btn-gaming.loading {
+    position: relative;
+    pointer-events: none;
+}
+
+.btn-gaming.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 1.5em;
+    height: 1.5em;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: white;
+    animation: spin 1s infinite linear;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 /* Rating stars */
