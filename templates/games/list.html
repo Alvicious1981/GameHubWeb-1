@@ -4,7 +4,7 @@
 
 {% block content %}
 <div class="games-section">
-    <div class="d-flex justify-content-between align-items-center mb-4">
+    <div class="d-flex justify-content-between align-items-center mb-4 fade-in-section">
         <h2>Games Library</h2>
         <div class="d-flex gap-3">
             <form method="GET" class="d-flex gap-2">
@@ -19,7 +19,7 @@
         </div>
     </div>
 
-    <div class="games-grid">
+    <div class="games-grid fade-in-section">
         {% for game in games %}
         <div class="card game-card">
             <div class="card-body">
@@ -30,9 +30,9 @@
                     <small class="text-muted">Released: {{ game.release_date.strftime('%B %d, %Y') }}</small>
                 </div>
                 <div class="rating mb-2">
-                    {% set avg_rating = game.reviews.with_entities(func.avg(Review.rating)).scalar() or 0 %}
+                    {% set avg_rating = game.average_rating|round|int %}
                     {% for i in range(5) %}
-                        <i data-feather="star" class="{{ 'active' if i < avg_rating|round|int else '' }}"></i>
+                        <i data-feather="star" class="{{ 'active' if i < avg_rating else '' }}"></i>
                     {% endfor %}
                     <span class="ms-2">({{ game.reviews.count() }} reviews)</span>
                 </div>
@@ -48,7 +48,7 @@
     </div>
 
     {% if not games %}
-    <div class="text-center py-5">
+    <div class="text-center py-5 fade-in-section">
         <i data-feather="inbox" class="mb-3" style="width: 48px; height: 48px;"></i>
         <p class="lead">No games found matching your criteria.</p>
     </div>

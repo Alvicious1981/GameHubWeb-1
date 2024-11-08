@@ -4,9 +4,9 @@
 
 {% block content %}
 <div class="news-section">
-    <h2 class="mb-4">Latest Gaming News</h2>
+    <h2 class="mb-4 fade-in-section">Latest Gaming News</h2>
     
-    <div class="row">
+    <div class="row fade-in-section">
         {% for news_item in news %}
         <div class="col-md-6 mb-4">
             <div class="card h-100">
@@ -29,7 +29,7 @@
     </div>
 
     {% if not news %}
-    <div class="text-center py-5">
+    <div class="text-center py-5 fade-in-section">
         <i data-feather="inbox" class="mb-3" style="width: 48px; height: 48px;"></i>
         <p class="lead">No news articles available at the moment.</p>
     </div>

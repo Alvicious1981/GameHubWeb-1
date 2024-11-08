@@ -4,7 +4,7 @@
 
 {% block content %}
 <div class="reviews-section">
-    <div class="d-flex justify-content-between align-items-center mb-4">
+    <div class="d-flex justify-content-between align-items-center mb-4 fade-in-section">
         <h2>Game Reviews</h2>
         {% if current_user.is_authenticated %}
         <button class="btn btn-gaming" data-bs-toggle="modal" data-bs-target="#newReviewModal">
@@ -13,7 +13,7 @@
         {% endif %}
     </div>
 
-    <div class="row">
+    <div class="row fade-in-section">
         {% for review in reviews %}
         <div class="col-md-6 mb-4">
             <div class="card h-100">
@@ -40,7 +40,7 @@
     </div>
 
     {% if not reviews %}
-    <div class="text-center py-5">
+    <div class="text-center py-5 fade-in-section">
         <i data-feather="message-square" class="mb-3" style="width: 48px; height: 48px;"></i>
         <p class="lead">No reviews available yet.</p>
     </div>

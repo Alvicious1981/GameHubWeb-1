@@ -11,7 +11,72 @@
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark">
-        <!-- Navigation content remains the same -->
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="{{ url_for('main.index') }}">
+                <i data-feather="zap" class="me-2"></i>
+                Gaming Hub
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link d-flex align-items-center" href="{{ url_for('games.list') }}">
+                            <i data-feather="play" class="me-2"></i>
+                            Games
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link d-flex align-items-center" href="{{ url_for('news.index') }}">
+                            <i data-feather="globe" class="me-2"></i>
+                            News
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link d-flex align-items-center" href="{{ url_for('reviews.index') }}">
+                            <i data-feather="star" class="me-2"></i>
+                            Reviews
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link d-flex align-items-center" href="{{ url_for('games.guides') }}">
+                            <i data-feather="book" class="me-2"></i>
+                            Guides
+                        </a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav">
+                    {% if current_user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link d-flex align-items-center" href="{{ url_for('profile.index') }}">
+                            <i data-feather="user" class="me-2"></i>
+                            Profile
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link d-flex align-items-center" href="{{ url_for('auth.logout') }}">
+                            <i data-feather="log-out" class="me-2"></i>
+                            Logout
+                        </a>
+                    </li>
+                    {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link d-flex align-items-center" href="{{ url_for('auth.login') }}">
+                            <i data-feather="log-in" class="me-2"></i>
+                            Login
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link d-flex align-items-center" href="{{ url_for('auth.register') }}">
+                            <i data-feather="user-plus" class="me-2"></i>
+                            Register
+                        </a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
     </nav>
 
     <main class="container my-4">
@@ -32,7 +97,7 @@
     <footer class="py-4">
         <div class="container text-center">
             <div class="mb-3">
-                <i data-feather="hexagon" class="me-2"></i>
+                <i data-feather="zap" class="me-2"></i>
                 <span class="h5">Gaming Hub</span>
             </div>
             <p class="mb-0 text-muted">&copy; 2024 Gaming Hub. All rights reserved.</p>

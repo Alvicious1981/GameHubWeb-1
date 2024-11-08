@@ -4,7 +4,7 @@
 
 {% block content %}
 <div class="guides-section">
-    <div class="d-flex justify-content-between align-items-center mb-4">
+    <div class="d-flex justify-content-between align-items-center mb-4 fade-in-section">
         <h2>Game Guides</h2>
         {% if current_user.is_authenticated %}
         <button class="btn btn-gaming" data-bs-toggle="modal" data-bs-target="#newGuideModal">
@@ -13,7 +13,7 @@
         {% endif %}
     </div>
 
-    <div class="row">
+    <div class="row fade-in-section">
         {% for guide in guides %}
         <div class="col-md-6 mb-4">
             <div class="card h-100">
@@ -30,6 +30,13 @@
         </div>
         {% endfor %}
     </div>
+
+    {% if not guides %}
+    <div class="text-center py-5 fade-in-section">
+        <i data-feather="book" class="mb-3" style="width: 48px; height: 48px;"></i>
+        <p class="lead">No guides available yet.</p>
+    </div>
+    {% endif %}
 </div>
 
 {% if current_user.is_authenticated %}
