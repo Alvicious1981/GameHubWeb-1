@@ -1,11 +1,16 @@
-/* Custom gaming-themed styles */
+/* Gaming-themed variables */
 :root {
-    --gaming-accent: #7c4dff;
-    --gaming-hover: #651fff;
+    --gaming-primary: #7c4dff;
+    --gaming-secondary: #651fff;
+    --gaming-accent: #00e5ff;
+    --gaming-neon: #39ff14;
+    --gaming-dark: #1a1a1a;
+    --gaming-card-bg: rgba(124, 77, 255, 0.1);
 }
 
+/* Base styles */
 body {
-    background-color: var(--bs-dark);
+    background: linear-gradient(135deg, var(--gaming-dark) 0%, #000 100%);
     min-height: 100vh;
     display: flex;
     flex-direction: column;
@@ -15,52 +20,122 @@ main {
     flex: 1;
 }
 
-.navbar-brand {
-    font-weight: bold;
-    color: var(--gaming-accent) !important;
+/* Gaming-themed components */
+.navbar {
+    background: linear-gradient(180deg, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.8) 100%);
+    border-bottom: 1px solid var(--gaming-primary);
 }
 
+.navbar-brand {
+    font-weight: bold;
+    color: var(--gaming-primary) !important;
+    text-shadow: 0 0 10px var(--gaming-accent);
+    transition: all 0.3s ease;
+}
+
+.navbar-brand:hover {
+    color: var(--gaming-accent) !important;
+    text-shadow: 0 0 15px var(--gaming-accent);
+}
+
+/* Hero section */
+.hero {
+    background: linear-gradient(45deg, var(--gaming-dark) 0%, rgba(124, 77, 255, 0.2) 100%);
+    padding: 4rem 0;
+    margin-bottom: 3rem;
+    border-radius: 0 0 2rem 2rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at center, rgba(124, 77, 255, 0.2) 0%, transparent 70%);
+    animation: pulse 4s infinite;
+}
+
+.hero h1 {
+    color: var(--gaming-primary);
+    text-shadow: 0 0 15px var(--gaming-accent);
+    font-weight: bold;
+    position: relative;
+}
+
+/* Card styles */
 .card {
-    transition: transform 0.2s;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: var(--gaming-card-bg);
+    border: 1px solid rgba(124, 77, 255, 0.2);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--gaming-primary), transparent);
+    transform: translateX(-100%);
+    transition: transform 0.5s ease;
 }
 
 .card:hover {
     transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(124, 77, 255, 0.3);
+    border-color: var(--gaming-primary);
 }
 
-.game-card {
-    background: linear-gradient(45deg, var(--bs-dark) 0%, var(--bs-dark-rgb) 100%);
+.card:hover::before {
+    transform: translateX(100%);
 }
 
-.rating {
-    color: var(--gaming-accent);
-}
-
+/* Gaming buttons */
 .btn-gaming {
-    background-color: var(--gaming-accent);
-    border-color: var(--gaming-accent);
-    color: white;
+    background: linear-gradient(45deg, var(--gaming-primary), var(--gaming-secondary));
+    border: none;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+}
+
+.btn-gaming::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, var(--gaming-secondary), var(--gaming-primary));
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: -1;
+}
+
+.btn-gaming:hover::before {
+    opacity: 1;
 }
 
 .btn-gaming:hover {
-    background-color: var(--gaming-hover);
-    border-color: var(--gaming-hover);
-    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 0 15px rgba(124, 77, 255, 0.5);
 }
 
-/* Custom scrollbar */
-::-webkit-scrollbar {
-    width: 8px;
+/* Rating stars */
+.rating {
+    color: var(--gaming-primary);
 }
 
-::-webkit-scrollbar-track {
-    background: var(--bs-dark);
-}
-
-::-webkit-scrollbar-thumb {
-    background: var(--gaming-accent);
-    border-radius: 4px;
+.rating i.active {
+    color: var(--gaming-accent);
+    filter: drop-shadow(0 0 2px var(--gaming-accent));
 }
 
 /* Game card grid */
@@ -70,10 +145,74 @@ main {
     gap: 1.5rem;
 }
 
-/* Profile section styles */
+/* Profile section */
 .profile-header {
-    background: linear-gradient(135deg, var(--gaming-accent) 0%, var(--gaming-hover) 100%);
+    background: linear-gradient(135deg, var(--gaming-primary) 0%, var(--gaming-secondary) 100%);
     padding: 2rem;
-    border-radius: 8px;
+    border-radius: 1rem;
     margin-bottom: 2rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.profile-header::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at center, rgba(255,255,255,0.1) 0%, transparent 70%);
+    animation: pulse 3s infinite;
+}
+
+/* Animations */
+@keyframes pulse {
+    0% {
+        opacity: 0.5;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0.5;
+    }
+}
+
+/* Feather icons customization */
+[data-feather] {
+    stroke: var(--gaming-primary);
+    transition: all 0.3s ease;
+}
+
+.btn:hover [data-feather],
+.card:hover [data-feather] {
+    stroke: var(--gaming-accent);
+    filter: drop-shadow(0 0 2px var(--gaming-accent));
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--gaming-dark);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--gaming-primary);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--gaming-accent);
+}
+
+/* Footer styling */
+footer {
+    background: linear-gradient(0deg, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.8) 100%);
+    border-top: 1px solid var(--gaming-primary);
+    padding: 2rem 0;
+    margin-top: auto;
 }
