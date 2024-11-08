@@ -6,6 +6,9 @@
     --gaming-neon: #39ff14;
     --gaming-dark: #1a1a1a;
     --gaming-card-bg: rgba(124, 77, 255, 0.1);
+    --font-heading: 'Chakra Petch', sans-serif;
+    --font-subheading: 'Oxanium', cursive;
+    --font-body: 'Roboto', sans-serif;
 }
 
 /* Base styles */
@@ -14,10 +17,28 @@ body {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+    font-family: var(--font-body);
 }
 
 main {
     flex: 1;
+}
+
+/* Typography */
+h1, h2, h3, .navbar-brand {
+    font-family: var(--font-heading);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.card-title, .nav-link {
+    font-family: var(--font-subheading);
+    font-weight: 600;
+}
+
+.lead {
+    font-family: var(--font-subheading);
+    font-weight: 400;
 }
 
 /* Gaming-themed components */
@@ -104,6 +125,8 @@ main {
     position: relative;
     overflow: hidden;
     z-index: 1;
+    font-family: var(--font-subheading);
+    font-weight: 600;
 }
 
 .btn-gaming::before {
