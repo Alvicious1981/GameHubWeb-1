@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block title %}Game Reviews{% endblock %}
+
+{% block content %}
+<div class="reviews-section">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Game Reviews</h2>
+        {% if current_user.is_authenticated %}
+        <button class="btn btn-gaming" data-bs-toggle="modal" data-bs-target="#newReviewModal">
+            <i data-feather="plus"></i> Write Review
+        </button>
+        {% endif %}
+    </div>
+
+    <div class="row">
+        {% for review in reviews %}
+        <div class="col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <h5 class="card-title mb-0">{{ review.game.title }}</h5>
+                        <div class="rating">
+                            {% for i in range(5) %}
+                            <i data-feather="star" class="{{ 'active' if i < review.rating else '' }}"></i>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <p class="card-text">{{ review.content }}</p>
+                    <div class="d-flex justify-content-between align-items-center mt-3">
+                        <small class="text-muted">
+                            By {{ review.author.username }} • 
+                            {{ review.created_at.strftime('%B %d, %Y') }}
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    {% if not reviews %}
+    <div class="text-center py-5">
+        <i data-feather="message-square" class="mb-3" style="width: 48px; height: 48px;"></i>
+        <p class="lead">No reviews available yet.</p>
+    </div>
+    {% endif %}
+</div>
+
+{% if current_user.is_authenticated %}
+<div class="modal fade" id="newReviewModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Write a Review</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" action="{{ url_for('reviews.create') }}">
+                    {{ form.hidden_tag() }}
+                    <div class="mb-3">
+                        <div class="rating-input">
+                            {{ form.rating(type="hidden") }}
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        {{ form.content.label(class="form-label") }}
+                        {{ form.content(class="form-control", rows="5") }}
+                    </div>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-gaming">Post Review</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/rating.js') }}"></script>
+{% endblock %}

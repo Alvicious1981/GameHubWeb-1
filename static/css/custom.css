@@ -1,0 +1,79 @@
+/* Custom gaming-themed styles */
+:root {
+    --gaming-accent: #7c4dff;
+    --gaming-hover: #651fff;
+}
+
+body {
+    background-color: var(--bs-dark);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1;
+}
+
+.navbar-brand {
+    font-weight: bold;
+    color: var(--gaming-accent) !important;
+}
+
+.card {
+    transition: transform 0.2s;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.game-card {
+    background: linear-gradient(45deg, var(--bs-dark) 0%, var(--bs-dark-rgb) 100%);
+}
+
+.rating {
+    color: var(--gaming-accent);
+}
+
+.btn-gaming {
+    background-color: var(--gaming-accent);
+    border-color: var(--gaming-accent);
+    color: white;
+}
+
+.btn-gaming:hover {
+    background-color: var(--gaming-hover);
+    border-color: var(--gaming-hover);
+    color: white;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bs-dark);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--gaming-accent);
+    border-radius: 4px;
+}
+
+/* Game card grid */
+.games-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+}
+
+/* Profile section styles */
+.profile-header {
+    background: linear-gradient(135deg, var(--gaming-accent) 0%, var(--gaming-hover) 100%);
+    padding: 2rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+}

@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block title %}Profile - {{ current_user.username }}{% endblock %}
+
+{% block content %}
+<div class="profile-section">
+    <div class="profile-header mb-4">
+        <div class="row align-items-center">
+            <div class="col-md-3 text-center">
+                <div class="avatar-container mb-3">
+                    <i data-feather="user" style="width: 64px; height: 64px;"></i>
+                </div>
+            </div>
+            <div class="col-md-9">
+                <h2 class="mb-2">{{ current_user.username }}</h2>
+                <p class="mb-0">
+                    <i data-feather="mail" class="feather-sm me-2"></i>
+                    {{ current_user.email }}
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i data-feather="star" class="feather-sm me-2"></i>
+                        Your Reviews
+                    </h5>
+                    <div class="list-group list-group-flush">
+                        {% for review in current_user.reviews %}
+                        <div class="list-group-item">
+                            <h6 class="mb-1">{{ review.game.title }}</h6>
+                            <p class="mb-1">{{ review.content[:100] }}...</p>
+                            <small class="text-muted">
+                                Rating: {{ review.rating }}/5 • 
+                                {{ review.created_at.strftime('%B %d, %Y') }}
+                            </small>
+                        </div>
+                        {% else %}
+                        <p class="text-muted">No reviews yet</p>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i data-feather="activity" class="feather-sm me-2"></i>
+                        Recent Activity
+                    </h5>
+                    <div class="timeline">
+                        {% for review in current_user.reviews[:5] %}
+                        <div class="timeline-item">
+                            <div class="timeline-content">
+                                <p class="mb-1">
+                                    Reviewed <strong>{{ review.game.title }}</strong>
+                                </p>
+                                <small class="text-muted">
+                                    {{ review.created_at.strftime('%B %d, %Y') }}
+                                </small>
+                            </div>
+                        </div>
+                        {% else %}
+                        <p class="text-muted">No recent activity</p>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
