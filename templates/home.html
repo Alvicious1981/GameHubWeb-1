@@ -34,7 +34,9 @@
                     <span class="ms-2">({{ game.review_count }} reviews)</span>
                 </div>
                 <div class="mt-3">
-                    <a href="#" class="btn btn-gaming btn-sm">View Details</a>
+                    <a href="#" class="btn btn-gaming btn-gaming-primary">
+                        <i data-feather="play-circle"></i> Play Now
+                    </a>
                 </div>
             </div>
         </div>
@@ -48,7 +50,30 @@
     <div class="games-grid">
         {% for game in games %}
         <div class="card game-card">
-            <!-- Game card content remains the same -->
+            <div class="card-body">
+                <h5 class="card-title">{{ game.title }}</h5>
+                <p class="card-text">{{ game.description[:100] if game.description else 'No description available' }}...</p>
+                <div class="d-flex justify-content-between align-items-center">
+                    <small class="text-muted">{{ game.release_date.strftime('%B %d, %Y') if game.release_date else 'Release date not available' }}</small>
+                    <span class="badge bg-primary">{{ game.genre }}</span>
+                </div>
+                <div class="rating mt-2">
+                    {% for i in range(5) %}
+                        <i data-feather="star" class="{{ 'active' if i < game.average_rating|round|int else '' }}"></i>
+                    {% endfor %}
+                    <span class="ms-2">({{ game.review_count }} reviews)</span>
+                </div>
+                <div class="mt-3 d-flex gap-2">
+                    <a href="#" class="btn btn-gaming btn-gaming-primary">
+                        <i data-feather="play-circle"></i> Play Now
+                    </a>
+                    {% if current_user.is_authenticated %}
+                    <a href="#" class="btn btn-gaming btn-gaming-secondary">
+                        <i data-feather="edit-3"></i> Review
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
         </div>
         {% endfor %}
     </div>
@@ -60,7 +85,15 @@
         {% for news_item in news %}
         <div class="col-md-4 mb-4">
             <div class="card h-100">
-                <!-- News card content remains the same -->
+                <div class="card-body">
+                    <h5 class="card-title">{{ news_item.title }}</h5>
+                    <p class="card-text">{{ news_item.content[:200] }}...</p>
+                    <div class="mt-3">
+                        <a href="#" class="btn btn-gaming btn-gaming-secondary">
+                            <i data-feather="arrow-right"></i> Read More
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
         {% endfor %}
@@ -70,7 +103,33 @@
 <section class="features mb-5 fade-in-section">
     <h2 class="mb-4">Why Choose Gaming Hub?</h2>
     <div class="row text-center">
-        <!-- Feature cards content remains the same -->
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <i data-feather="users" class="mb-3" style="width: 48px; height: 48px;"></i>
+                    <h5>Community Driven</h5>
+                    <p>Join a thriving community of gamers sharing experiences and tips.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <i data-feather="trending-up" class="mb-3" style="width: 48px; height: 48px;"></i>
+                    <h5>Smart Recommendations</h5>
+                    <p>Get personalized game suggestions based on your preferences.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <i data-feather="book-open" class="mb-3" style="width: 48px; height: 48px;"></i>
+                    <h5>Comprehensive Guides</h5>
+                    <p>Access detailed guides and walkthroughs for your favorite games.</p>
+                </div>
+            </div>
+        </div>
     </div>
 </section>
 {% endblock %}

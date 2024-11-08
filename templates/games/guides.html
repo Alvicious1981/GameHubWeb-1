@@ -7,7 +7,7 @@
     <div class="d-flex justify-content-between align-items-center mb-4 fade-in-section">
         <h2>Game Guides</h2>
         {% if current_user.is_authenticated %}
-        <button class="btn btn-gaming" data-bs-toggle="modal" data-bs-target="#newGuideModal">
+        <button class="btn btn-gaming btn-gaming-primary" data-bs-toggle="modal" data-bs-target="#newGuideModal">
             <i data-feather="plus"></i> New Guide
         </button>
         {% endif %}
@@ -22,8 +22,13 @@
                     <h6 class="card-subtitle mb-2 text-muted">{{ guide.game.title }}</h6>
                     <p class="card-text">{{ guide.content[:200] }}...</p>
                     <div class="d-flex justify-content-between align-items-center">
-                        <small class="text-muted">{{ guide.created_at.strftime('%B %d, %Y') }}</small>
-                        <a href="#" class="btn btn-gaming btn-sm">Read More</a>
+                        <small class="text-muted">
+                            <i data-feather="calendar" class="feather-sm me-1"></i>
+                            {{ guide.created_at.strftime('%B %d, %Y') }}
+                        </small>
+                        <a href="#" class="btn btn-gaming btn-gaming-secondary">
+                            <i data-feather="book-open"></i> Read More
+                        </a>
                     </div>
                 </div>
             </div>
@@ -53,13 +58,28 @@
                     <div class="mb-3">
                         {{ form.title.label(class="form-label") }}
                         {{ form.title(class="form-control") }}
+                        {% for error in form.title.errors %}
+                        <span class="text-danger">{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.game_id.label(class="form-label") }}
+                        {{ form.game_id(class="form-select") }}
+                        {% for error in form.game_id.errors %}
+                        <span class="text-danger">{{ error }}</span>
+                        {% endfor %}
                     </div>
                     <div class="mb-3">
                         {{ form.content.label(class="form-label") }}
                         {{ form.content(class="form-control", rows="5") }}
+                        {% for error in form.content.errors %}
+                        <span class="text-danger">{{ error }}</span>
+                        {% endfor %}
                     </div>
                     <div class="d-grid">
-                        <button type="submit" class="btn btn-gaming">Create Guide</button>
+                        <button type="submit" class="btn btn-gaming btn-gaming-primary">
+                            <i data-feather="save"></i> Create Guide
+                        </button>
                     </div>
                 </form>
             </div>

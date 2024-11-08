@@ -97,14 +97,32 @@ def list():
         query = query.filter(Game.genre == selected_genre)
     
     games = query.all()
-    # Import Review model in the template context
     return render_template('games/list.html', games=games, filter_form=filter_form, func=func, Review=Review)
 
 @games_bp.route('/guides')
 def guides():
     guides = Guide.query.order_by(Guide.created_at.desc()).all()
     form = GuideForm()
+    games = Game.query.order_by(Game.title).all()
+    form.game_id.choices = [(game.id, game.title) for game in games]
     return render_template('games/guides.html', guides=guides, form=form)
+
+@games_bp.route('/create_guide', methods=['POST'])
+@login_required
+def create_guide():
+    form = GuideForm()
+    games = Game.query.order_by(Game.title).all()
+    form.game_id.choices = [(game.id, game.title) for game in games]
+    if form.validate_on_submit():
+        guide = Guide(
+            title=form.title.data,
+            content=form.content.data,
+            game_id=form.game_id.data
+        )
+        db.session.add(guide)
+        db.session.commit()
+        flash('Guide created successfully!')
+    return redirect(url_for('games.guides'))
 
 @news_bp.route('/')
 def index():
