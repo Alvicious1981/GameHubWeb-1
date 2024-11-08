@@ -18,20 +18,26 @@ def index():
     news = News.query.order_by(News.created_at.desc()).limit(3).all()
     
     # Get recommended games if user is logged in
-    recommended_games = []
     if current_user.is_authenticated:
         recommended_games = current_user.get_recommended_games(limit=6)
     else:
         # For non-logged in users, show popular games based on ratings
-        recommended_games = db.session.query(
-            Game,
+        # Using a subquery to get the ratings data
+        ratings_subquery = db.session.query(
+            Review.game_id,
             func.avg(Review.rating).label('avg_rating'),
             func.count(Review.id).label('review_count')
-        ).outerjoin(Review).group_by(Game.id).order_by(
-            func.avg(Review.rating).desc(),
-            func.count(Review.id).desc()
+        ).group_by(Review.game_id).subquery()
+        
+        # Join with games and order by ratings
+        recommended_games = db.session.query(Game).join(
+            ratings_subquery,
+            Game.id == ratings_subquery.c.game_id,
+            isouter=True
+        ).order_by(
+            ratings_subquery.c.avg_rating.desc().nullslast(),
+            ratings_subquery.c.review_count.desc().nullslast()
         ).limit(6).all()
-        recommended_games = [game[0] for game in recommended_games]
     
     return render_template('home.html', games=games, news=news, recommended_games=recommended_games)
 
