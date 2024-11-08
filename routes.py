@@ -3,7 +3,8 @@ from flask_login import login_user, logout_user, login_required, current_user
 from app import db
 from models import User, Game, Review, News, Guide
 from forms import LoginForm, RegisterForm, ReviewForm, GuideForm, GameFilterForm
-from sqlalchemy import func
+from sqlalchemy import func, and_
+from datetime import datetime
 
 main_bp = Blueprint('main', __name__)
 auth_bp = Blueprint('auth', __name__, url_prefix='/auth')
@@ -17,20 +18,37 @@ def index():
     games = Game.query.order_by(Game.release_date.desc()).limit(6).all()
     news = News.query.order_by(News.created_at.desc()).limit(3).all()
     
-    # Get recommended games if user is logged in
-    if current_user.is_authenticated:
-        recommended_games = current_user.get_recommended_games(limit=6)
-    else:
-        # For non-logged in users, show popular games based on ratings
-        recommended_games = db.session.query(Game).join(
-            Review,
-            Game.id == Review.game_id
-        ).group_by(Game.id).order_by(
-            func.avg(Review.rating).desc(),
-            func.count(Review.id).desc()
-        ).limit(6).all()
+    try:
+        if current_user.is_authenticated:
+            recommended_games = current_user.get_recommended_games(limit=6)
+            if not recommended_games:
+                recommended_games = get_popular_games(limit=6)
+        else:
+            recommended_games = get_popular_games(limit=6)
+    except Exception as e:
+        print(f"Error getting recommendations: {e}")
+        recommended_games = []
     
-    return render_template('home.html', games=games, news=news, recommended_games=recommended_games)
+    return render_template('home.html', 
+                         games=games, 
+                         news=news, 
+                         recommended_games=recommended_games)
+
+def get_popular_games(limit=6):
+    """Get popular games based on ratings and review count"""
+    try:
+        # Get games with their average ratings and review counts
+        games = db.session.query(Game).all()
+        
+        # Sort games by their average rating and review count
+        rated_games = [(game, game.average_rating, game.review_count) for game in games]
+        rated_games.sort(key=lambda x: (x[1], x[2]), reverse=True)
+        
+        # Return the top games
+        return [game for game, _, _ in rated_games[:limit]]
+    except Exception as e:
+        print(f"Error getting popular games: {e}")
+        return []
 
 @auth_bp.route('/login', methods=['GET', 'POST'])
 def login():
@@ -68,11 +86,9 @@ def logout():
 @games_bp.route('/')
 def list():
     filter_form = GameFilterForm()
-    # Get all unique genres for the filter dropdown
-    genres = [(g[0], g[0]) for g in db.session.query(Game.genre).distinct().order_by(Game.genre)]
+    genres = [(g.genre, g.genre) for g in Game.query.with_entities(Game.genre).distinct().order_by(Game.genre)]
     filter_form.genre.choices = [('all', 'All Genres')] + genres
     
-    # Apply genre filter if selected
     selected_genre = request.args.get('genre', 'all')
     filter_form.genre.default = selected_genre
     
@@ -81,7 +97,7 @@ def list():
         query = query.filter(Game.genre == selected_genre)
     
     games = query.all()
-    return render_template('games/list.html', games=games, filter_form=filter_form, func=func, Review=Review)
+    return render_template('games/list.html', games=games, filter_form=filter_form)
 
 @games_bp.route('/guides')
 def guides():
@@ -96,13 +112,12 @@ def index():
 
 @reviews_bp.route('/')
 def index():
-    reviews = Review.query.order_by(Review.created_at.desc()).all()
+    reviews = Review.query.join(Game).order_by(Review.created_at.desc()).all()
     form = ReviewForm()
     return render_template('reviews/index.html', reviews=reviews, form=form)
 
 @profile_bp.route('/')
 @login_required
 def index():
-    # Get recommended games for the user's profile page
     recommended_games = current_user.get_recommended_games(limit=6)
     return render_template('profile/index.html', recommended_games=recommended_games)

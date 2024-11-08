@@ -22,9 +22,9 @@
         <div class="card game-card">
             <div class="card-body">
                 <h5 class="card-title">{{ game.title }}</h5>
-                <p class="card-text">{{ game.description[:100] }}...</p>
+                <p class="card-text">{{ game.description[:100] if game.description else 'No description available' }}...</p>
                 <div class="d-flex justify-content-between align-items-center">
-                    <small class="text-muted">{{ game.release_date.strftime('%B %d, %Y') }}</small>
+                    <small class="text-muted">{{ game.release_date.strftime('%B %d, %Y') if game.release_date else 'Release date not available' }}</small>
                     <span class="badge bg-primary">{{ game.genre }}</span>
                 </div>
                 <div class="rating mt-2">
@@ -50,9 +50,9 @@
         <div class="card game-card">
             <div class="card-body">
                 <h5 class="card-title">{{ game.title }}</h5>
-                <p class="card-text">{{ game.description[:100] }}...</p>
+                <p class="card-text">{{ game.description[:100] if game.description else 'No description available' }}...</p>
                 <div class="d-flex justify-content-between align-items-center">
-                    <small class="text-muted">{{ game.release_date.strftime('%B %d, %Y') }}</small>
+                    <small class="text-muted">{{ game.release_date.strftime('%B %d, %Y') if game.release_date else 'Release date not available' }}</small>
                     <span class="badge bg-primary">{{ game.genre }}</span>
                 </div>
                 <div class="mt-3">
