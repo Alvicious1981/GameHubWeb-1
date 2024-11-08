@@ -19,3 +19,6 @@ class ReviewForm(FlaskForm):
 class GuideForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired(), Length(max=200)])
     content = TextAreaField('Guide Content', validators=[DataRequired()])
+
+class GameFilterForm(FlaskForm):
+    genre = SelectField('Genre', choices=[('all', 'All Genres')], default='all')

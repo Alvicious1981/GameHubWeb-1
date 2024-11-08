@@ -6,8 +6,16 @@
 <div class="games-section">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2>Games Library</h2>
-        <div class="search-container">
-            <input type="text" class="form-control search-input" placeholder="Search games...">
+        <div class="d-flex gap-3">
+            <form method="GET" class="d-flex gap-2">
+                {{ filter_form.genre(class="form-select") }}
+                <button type="submit" class="btn btn-secondary">
+                    <i data-feather="filter"></i> Filter
+                </button>
+            </form>
+            <div class="search-container">
+                <input type="text" class="form-control search-input" placeholder="Search games...">
+            </div>
         </div>
     </div>
 
@@ -38,6 +46,13 @@
         </div>
         {% endfor %}
     </div>
+
+    {% if not games %}
+    <div class="text-center py-5">
+        <i data-feather="inbox" class="mb-3" style="width: 48px; height: 48px;"></i>
+        <p class="lead">No games found matching your criteria.</p>
+    </div>
+    {% endif %}
 </div>
 {% endblock %}
 

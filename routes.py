@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, redirect, url_for, flash, request
 from flask_login import login_user, logout_user, login_required, current_user
 from app import db
 from models import User, Game, Review, News, Guide
-from forms import LoginForm, RegisterForm, ReviewForm, GuideForm
+from forms import LoginForm, RegisterForm, ReviewForm, GuideForm, GameFilterForm
 from sqlalchemy import func
 
 main_bp = Blueprint('main', __name__)
@@ -70,13 +70,27 @@ def logout():
 
 @games_bp.route('/')
 def list():
-    games = Game.query.all()
-    return render_template('games/list.html', games=games)
+    filter_form = GameFilterForm()
+    # Get all unique genres for the filter dropdown
+    genres = [(g[0], g[0]) for g in db.session.query(Game.genre).distinct().order_by(Game.genre)]
+    filter_form.genre.choices = [('all', 'All Genres')] + genres
+    
+    # Apply genre filter if selected
+    selected_genre = request.args.get('genre', 'all')
+    filter_form.genre.default = selected_genre
+    
+    query = Game.query
+    if selected_genre != 'all':
+        query = query.filter(Game.genre == selected_genre)
+    
+    games = query.all()
+    return render_template('games/list.html', games=games, filter_form=filter_form, func=func)
 
 @games_bp.route('/guides')
 def guides():
     guides = Guide.query.order_by(Guide.created_at.desc()).all()
-    return render_template('games/guides.html', guides=guides)
+    form = GuideForm()
+    return render_template('games/guides.html', guides=guides, form=form)
 
 @news_bp.route('/')
 def index():
@@ -86,7 +100,8 @@ def index():
 @reviews_bp.route('/')
 def index():
     reviews = Review.query.order_by(Review.created_at.desc()).all()
-    return render_template('reviews/index.html', reviews=reviews)
+    form = ReviewForm()
+    return render_template('reviews/index.html', reviews=reviews, form=form)
 
 @profile_bp.route('/')
 @login_required
